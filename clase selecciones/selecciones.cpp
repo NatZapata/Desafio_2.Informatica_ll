@@ -2,7 +2,9 @@
 
 seleccion::seleccion(string Pais_,
                      string Tecnico_,
+                     string confederacion_,
                      unsigned char Ranking_,
+                     // bool anfitrion_,
 
                      unsigned short GolesFavor_,
                      unsigned short GolesContra_,
@@ -12,9 +14,9 @@ seleccion::seleccion(string Pais_,
                      unsigned short Amarillas_,
                      unsigned short Rojas_,
                      unsigned short Faltas_,
-                     const Jugador* Jugadores_)
+                     Jugador* Jugadores_)
     : Pais(Pais_),
-    Tecnico(Tecnico_),Ranking(Ranking_),GolesFavor(GolesFavor_),
+    Tecnico(Tecnico_),confederacion(confederacion_),Ranking(Ranking_),GolesFavor(GolesFavor_),
     GolesContra(GolesContra_),Ganados(Ganados_),Empatados(Empatados_),
     Perdidos(Perdidos_),Amarillas(Amarillas_),Rojas(Rojas_),
     Faltas(Faltas_){
@@ -26,7 +28,9 @@ seleccion::seleccion(string Pais_,
 seleccion::seleccion()
     : Pais(""),
     Tecnico(""),
+    confederacion(""),
     Ranking(0),
+    //anfitrion(false),
     GolesFavor(0),
     GolesContra(0),
     Ganados(0),
@@ -36,13 +40,16 @@ seleccion::seleccion()
     Rojas(0),
     Faltas(0)
 {
-    for (int i = 0; i < 26; i++) {
+    for (unsigned short i = 0; i < 26; i++) {
         Jugadores[i] = Jugador();
     }
 }
 
 seleccion::~seleccion(){}
 
+bool seleccion::operator>(const seleccion& sele2){
+    return (this->Ranking)<sele2.Ranking;
+}
 
 const string& seleccion::GetPais() const {
     return Pais;
@@ -51,10 +58,14 @@ const string& seleccion::GetPais() const {
 const string& seleccion::GetTecnico() const {
     return Tecnico;
 }
+const string& seleccion::GetConfederacion() const{
+    return confederacion;
+}
 
 unsigned char seleccion::GetRanking() const {
     return Ranking;
 }
+
 
 unsigned short seleccion::GetGolesFavor() const {
     return GolesFavor;
@@ -90,6 +101,8 @@ unsigned short seleccion::GetFaltas() const {
 
 
 // Estos serán los setter de la selección en particular
+
+
 
 void seleccion::SetGolesFavor(unsigned short goles) {
     GolesFavor = goles;
@@ -140,6 +153,7 @@ void seleccion::SumarAmarillaJugador(unsigned short i) {
 void seleccion::SumarRojaJugador(unsigned short i) {
     Jugadores[i].SetRojas(Jugadores[i].GetRojas() + 1);
 }
+
 
 
 

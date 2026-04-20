@@ -8,9 +8,11 @@ using namespace std;
 class seleccion {
 
 private:
-    const string Pais;
-    const string Tecnico;
-    const unsigned char Ranking;
+    string Pais;
+    string Tecnico;
+    string confederacion;
+    unsigned char Ranking;
+    // bool anfitrion;
 
     unsigned short GolesFavor;
     unsigned short GolesContra;
@@ -25,7 +27,9 @@ private:
 public:
     seleccion( string Pais_,
               string Tecnico_,
+              string confederacion,
               unsigned char Ranking_,
+              // bool anfitrion_,
 
               unsigned short GolesFavor_,
               unsigned short GolesContra_,
@@ -35,13 +39,17 @@ public:
               unsigned short Amarillas_,
               unsigned short Rojas_,
               unsigned short Faltas_,
-              const Jugador* Jugadores_
+              Jugador* Jugadores_
               );
     seleccion();
     ~seleccion();
 
+    //se sobrecargara el operador < para la comparación entre selecciones.
+    bool operator>(const seleccion& sele2);
+
     const string& GetPais() const;
     const string& GetTecnico() const;
+    const string& GetConfederacion() const;
     unsigned char GetRanking() const;
 
     unsigned short GetGolesFavor() const;
@@ -53,6 +61,7 @@ public:
     unsigned short GetRojas() const;
     unsigned short GetFaltas() const;
 
+    void Setanfitrion(bool anfitrion_);
     void SetGolesFavor(unsigned short goles);
     void SetGolesContra(unsigned short goles);
     void SetGanados(unsigned short ganados);
