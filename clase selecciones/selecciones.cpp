@@ -48,7 +48,7 @@ seleccion::seleccion()
 seleccion::~seleccion(){}
 
 bool seleccion::operator>(const seleccion& sele2){
-    return (this->Ranking)<sele2.Ranking;
+    return (this->Ranking)>sele2.Ranking;
 }
 
 const string& seleccion::GetPais() const {
@@ -100,6 +100,36 @@ unsigned short seleccion::GetFaltas() const {
 }
 
 
+//Creacción dinámica del equipo titular
+Jugador* seleccion::Titulares(unsigned char* jugadores) {
+
+    Jugador* titulares = new Jugador[11];
+
+
+    if (jugadores == nullptr) {
+        for (int i = 0; i < 11; i++) {
+            titulares[i] = Jugadores[i];
+        }
+        return titulares;
+    }
+
+
+    for (unsigned char i = 0; i < 11; i++) {
+
+        unsigned char idx = jugadores[i];
+
+        if (idx >= 26) {
+            titulares[i] = Jugador();
+        }
+        else {
+            titulares[i] = Jugadores[idx];
+        }
+    }
+
+    return titulares;
+}
+
+
 // Estos serán los setter de la selección en particular
 
 
@@ -117,7 +147,7 @@ void seleccion::SetGanados(unsigned short ganados) {
 }
 
 void seleccion::SetEmpatados(unsigned short empatados) {
-    Empatados = empatados;
+    Empatados+= empatados;
 }
 
 void seleccion::SetPerdidos(unsigned short perdidos) {
@@ -152,6 +182,16 @@ void seleccion::SumarAmarillaJugador(unsigned short i) {
 
 void seleccion::SumarRojaJugador(unsigned short i) {
     Jugadores[i].SetRojas(Jugadores[i].GetRojas() + 1);
+}
+//sobrecarga del operador <<, puede escribir en archivos o imprimir.
+//útil para estadísticas.
+ostream& operator<<(ostream& os, const seleccion& s){
+    os << "Pais: " << s.GetPais() << endl;
+    os << "Ranking: " << (int)s.GetRanking() << endl;
+    // os << "Puntos: " << s.GetPuntos() << endl;
+
+    return os;
+
 }
 
 

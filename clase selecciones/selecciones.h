@@ -1,9 +1,9 @@
 #ifndef SELECCIONES_H
 #define SELECCIONES_H
-#include<string>
+//#include<string>
 #include "jugador.h"
+#include <iostream>
 using namespace std;
-
 
 class seleccion {
 
@@ -60,8 +60,9 @@ public:
     unsigned short GetAmarillas() const;
     unsigned short GetRojas() const;
     unsigned short GetFaltas() const;
+    Jugador* Titulares(unsigned char* jugadores);
 
-    void Setanfitrion(bool anfitrion_);
+    //void Setanfitrion(bool anfitrion_);
     void SetGolesFavor(unsigned short goles);
     void SetGolesContra(unsigned short goles);
     void SetGanados(unsigned short ganados);
@@ -82,6 +83,7 @@ public:
 
 };
 
+ostream& operator<<(ostream& os, const seleccion& s);
 
 
 
