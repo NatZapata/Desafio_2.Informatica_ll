@@ -1,12 +1,16 @@
 #ifndef GRUPO_H
 #define GRUPO_H
-#include "selecciones.h"
+#include "partido.h"
 
 class Grupo
 {
 private:
     char letra_grupo;
-    seleccion equipos[4];
+    seleccion *equipo1;
+    seleccion *equipo2;
+    seleccion *equipo3;
+    seleccion *equipo4;
+    Partido* partidos[6];
     unsigned char cantidad_puntos[4];
     unsigned short goles_favor[4];
     unsigned short goles_contra[4];
@@ -15,7 +19,10 @@ private:
 public:
     Grupo();
     Grupo(char letra_grupo_,
-          seleccion *equipos_,
+          seleccion *equipo1_,
+          seleccion *equipo2_,
+          seleccion *equipo3_,
+          seleccion *equipo4_,
           unsigned char *cantidad_puntos_,
           unsigned short *goles_favor_,
           unsigned short *goles_contra_
@@ -25,17 +32,18 @@ public:
 
     //métodos getter.
     char GetLetraGrupo();
-    seleccion GetEquipo(string &NombreEquipo);
+    seleccion *GetEquipo(string &NombreEquipo);
     unsigned char Getcantidad_puntos(unsigned char NumeroEquipo);
+    void SetCantidad_puntos(unsigned char Equipo,
+                            unsigned char PuntosGanados);
+    void SimularGrupo();
 
 
 
-    void AgregarEquipo(seleccion &Equipo,
-                       unsigned char posicion);
-    void SimularPartidos();
-    void CalcularTabla();
-    void ImprimirTabla();
+    void CrearlarTabla();
+    //void ImprimirTabla();
 
 };
+
 
 #endif // GRUPO_H
