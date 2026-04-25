@@ -1,11 +1,10 @@
 #include "selecciones.h"
 
+
 seleccion::seleccion(string Pais_,
                      string Tecnico_,
                      string confederacion_,
                      unsigned char Ranking_,
-                     // bool anfitrion_,
-
                      unsigned short GolesFavor_,
                      unsigned short GolesContra_,
                      unsigned short Ganados_,
@@ -25,6 +24,56 @@ seleccion::seleccion(string Pais_,
         Jugadores[i]= Jugadores_[i];
     }
 }
+
+
+
+seleccion::seleccion(const seleccion& other)
+    : Pais(other.Pais),
+    Tecnico(other.Tecnico),
+    confederacion(other.confederacion),
+    Ranking(other.Ranking),
+    GolesFavor(other.GolesFavor),
+    GolesContra(other.GolesContra),
+    Ganados(other.Ganados),
+    Empatados(other.Empatados),
+    Perdidos(other.Perdidos),
+    Amarillas(other.Amarillas),
+    Rojas(other.Rojas),
+    Faltas(other.Faltas)
+{
+    cout << "\n====================================\n";
+    cout << "DEBUG CONSTRUCTOR DE COPIAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n";
+    cout << "Pais: " << Pais << "\n";
+    cout << "====================================\n";
+
+    cout << "\n--- ESTADO ORIGINAL (other) ---\n";
+
+    for (int i = 0; i < 26; i++)
+    {
+        cout << "Jugador " << i
+             << " | nombre: " << other.Jugadores[i].GetNombre()
+             << " | goles: " << other.Jugadores[i].GetGoles()
+             << endl;
+    }
+
+    cout << "\n--- COPIANDO JUGADORES ---\n";
+
+    for (int i = 0; i < 26; i++)
+    {
+        Jugadores[i] = other.Jugadores[i];
+
+        cout << "Jugador " << i
+             << " | goles copiados: "
+             << Jugadores[i].GetGoles()
+             << endl;
+    }
+
+    cout << "====================================\n";
+    cout << "FIN DEBUG\n";
+    cout << "====================================\n\n";
+}
+
+
 seleccion::seleccion()
     : Pais(""),
     Tecnico(""),
@@ -101,6 +150,8 @@ unsigned short seleccion::GetFaltas() const {
 
 
 //Creacción dinámica del equipo titular
+
+/*
 Jugador* seleccion::Titulares(unsigned char* jugadores) {
 
     Jugador* titulares = new Jugador[11];
@@ -129,7 +180,26 @@ Jugador* seleccion::Titulares(unsigned char* jugadores) {
     return titulares;
 }
 
+*/
+Jugador* seleccion::Titulares()
+{
+    static Jugador titulares[11];
 
+    bool usado[26] = {false};
+
+    for (int i = 0; i < 11; i++)
+    {
+        int idx;
+        do {
+            idx = rand() % 26;
+        } while (usado[idx]);
+
+        usado[idx] = true;
+        titulares[i] = Jugadores[idx];
+    }
+
+    return titulares;
+}
 // Estos serán los setter de la selección en particular
 
 
@@ -192,6 +262,51 @@ ostream& operator<<(ostream& os, const seleccion& s){
 
     return os;
 
+}
+seleccion& seleccion::operator=(const seleccion& other)
+{
+    if (this == &other) return *this;
+
+    Pais = other.Pais;
+    Tecnico = other.Tecnico;
+    confederacion = other.confederacion;
+    Ranking = other.Ranking;
+
+    GolesFavor = other.GolesFavor;
+    GolesContra = other.GolesContra;
+    Ganados = other.Ganados;
+    Empatados = other.Empatados;
+    Perdidos = other.Perdidos;
+    Amarillas = other.Amarillas;
+    Rojas = other.Rojas;
+    Faltas = other.Faltas;
+
+    for (int i = 0; i < 26; i++)
+        Jugadores[i] = other.Jugadores[i];
+
+    return *this;
+}
+
+Jugador* seleccion::GetJugadores()
+{
+    return Jugadores;
+}
+
+void seleccion::SeleccionarTitulares(int indices[11])
+{
+    bool usado[26] = {false};
+
+    for (int i = 0; i < 11; i++)
+    {
+        int idx;
+
+        do {
+            idx = rand() % 26;
+        } while (usado[idx]);
+
+        usado[idx] = true;
+        indices[i] = idx;
+    }
 }
 
 

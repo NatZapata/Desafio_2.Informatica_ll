@@ -42,9 +42,12 @@ public:
               Jugador* Jugadores_
               );
     seleccion();
+    seleccion(const seleccion& other);
+
     ~seleccion();
 
     //se sobrecargara el operador < para la comparación entre selecciones.
+    seleccion& operator=(const seleccion& other);
     bool operator>(const seleccion& sele2);
 
     const string& GetPais() const;
@@ -60,7 +63,8 @@ public:
     unsigned short GetAmarillas() const;
     unsigned short GetRojas() const;
     unsigned short GetFaltas() const;
-    Jugador* Titulares(unsigned char* jugadores);
+    //Jugador* Titulares(unsigned char* jugadores);
+    Jugador* Titulares();
 
     //void Setanfitrion(bool anfitrion_);
     void SetGolesFavor(unsigned short goles);
@@ -78,6 +82,9 @@ public:
     void SumarPartidoJugador(unsigned short i);
     void SumarAmarillaJugador(unsigned short i);
     void SumarRojaJugador(unsigned short i);
+    Jugador* GetJugadores();
+    void SeleccionarTitulares(int indices[11]);
+
 
 
 
@@ -89,3 +96,4 @@ ostream& operator<<(ostream& os, const seleccion& s);
 
 
 #endif // SELECCIONES_H
+
