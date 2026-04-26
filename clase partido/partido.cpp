@@ -81,15 +81,83 @@ void Partido::SetSede(const string& s) { sede = s; }
 
 void Partido::SetProrroga(bool p) { prorroga = p; }
 
-/*
+void Partido::EstadisticaPartido(
+    int titulares1[11], int titulares2[11],
+    unsigned char gol1, unsigned char gol2
+    )
+{
+    Jugador* jugadores[2] = {Equipo1->GetJugadores(), Equipo2->GetJugadores()};
+    int* titulares[2] = {titulares1, titulares2};
+    string nombresEquipos[2] = {Equipo1->GetPais(), Equipo2->GetPais()};
+
+    cout << "\n========== RESUMEN DEL PARTIDO ==========\n";
+    cout << nombresEquipos[0] << " " << (int)gol1
+         << " - " << (int)gol2 << " "
+         << nombresEquipos[1] << endl;
+
+    // -------- GOLES --------
+    cout << "\nGOLEADORES:\n";
+    for (int e = 0; e < 2; e++)
+    {
+        for (int i = 0; i < 11; i++)
+        {
+            Jugador& j = jugadores[e][titulares[e][i]];
+            if (j.GetGoles() > 0)
+            {
+                cout << j.GetNombre() << " (" << nombresEquipos[e]
+                     << ") - " << j.GetGoles() << endl;
+            }
+        }
+    }
+
+    // -------- TARJETAS --------
+    cout << "\nTARJETAS:\n";
+    for (int e = 0; e < 2; e++)
+    {
+        for (int i = 0; i < 11; i++)
+        {
+            Jugador& j = jugadores[e][titulares[e][i]];
+            if (j.GetAmarillas() > 0 || j.GetRojas() > 0)
+            {
+                cout << j.GetNombre() << " (" << nombresEquipos[e] << ") -> ";
+                cout << "A: " << j.GetAmarillas()
+                     << " R: " << j.GetRojas() << endl;
+            }
+        }
+    }
+
+    // -------- FALTAS --------
+    cout << "\nFALTAS:\n";
+    for (int e = 0; e < 2; e++)
+    {
+        for (int i = 0; i < 11; i++)
+        {
+            Jugador& j = jugadores[e][titulares[e][i]];
+            if (j.GetFaltas() > 0)
+            {
+                cout << j.GetNombre() << " (" << nombresEquipos[e]
+                     << ") - " << j.GetFaltas() << endl;
+            }
+        }
+    }
+    cout <<"-------------------------------------------------------------------------"<<endl;
+}
 void Partido::SimularPartido(unsigned char* E1, unsigned char* E2)
 {
-    // -------------------- TITULARES --------------------
-    Jugador* EquipoTitular1 = Equipo1->Titulares(nullptr);
-    Jugador* EquipoTitular2 = Equipo2->Titulares(nullptr);
+    int titulares1[11];
+    int titulares2[11];
+
+    Jugador* jugadores1 = Equipo1->GetJugadores();
+    Jugador* jugadores2 = Equipo2->GetJugadores();
+
+    Equipo1->SeleccionarTitulares(titulares1);
+    Equipo2->SeleccionarTitulares(titulares2);
 
     unsigned char gol1 = 0;
     unsigned char gol2 = 0;
+
+
+
 
     unsigned char amarillas1 = 0;
     unsigned char amarillas2 = 0;
@@ -97,7 +165,7 @@ void Partido::SimularPartido(unsigned char* E1, unsigned char* E2)
     unsigned char rojas1 = 0;
     unsigned char rojas2 = 0;
 
-    // -------------------- EXPECTATIVA DE GOLES --------------------
+    // -------------------- GOLES ESPERADOS (xG) --------------------
     float gExp1 =
         1.35f *
         pow((float)Equipo1->GetGolesFavor() /
@@ -122,10 +190,11 @@ void Partido::SimularPartido(unsigned char* E1, unsigned char* E2)
                  Equipo1->GetEmpatados() +
                  Equipo1->GetPerdidos() + 1), 0.4f);
 
-    gExp1 += rand() % 2;
-    gExp2 += rand() % 2;
+    // ruido aleatorio leve
+    gExp1 += rand() % 3;
+    gExp2 += rand() % 3;
 
-    // -------------------- SIMULACIÓN 90 MIN --------------------
+    // -------------------- GENERACIÓN DE GOLES --------------------
     for (int i = 0; i < 11; i++)
     {
         if ((rand() % 100) < 4)
@@ -144,179 +213,30 @@ void Partido::SimularPartido(unsigned char* E1, unsigned char* E2)
         }
     }
 
-    // -------------------- GOLES A JUGADORES --------------------
+    // -------------------- GOLEADORES --------------------
     for (int i = 0; i < gol1; i++)
-        EquipoTitular1[rand() % 11].SetGoles(1);
+    {
+        int idx = rand() % 11;
+        jugadores1[titulares1[idx]].SetGoles(1);
+    }
 
     for (int i = 0; i < gol2; i++)
-        EquipoTitular2[rand() % 11].SetGoles(1);
-
-    // -------------------- TARJETAS --------------------
-    for (int i = 0; i < 11; i++)
     {
-        int a = 0;
-
-        if ((rand() % 1000) < 60) a++;
-        if (a == 1 && (rand() % 1000) < 11) a++;
-
-        EquipoTitular1[i].SetAmarillas(a);
-        if (a == 2) { EquipoTitular1[i].SetRojas(1); rojas1++; }
-
-        amarillas1 += a;
-    }
-
-    for (int i = 0; i < 11; i++)
-    {
-        int a = 0;
-
-        if ((rand() % 1000) < 60) a++;
-        if (a == 1 && (rand() % 1000) < 11) a++;
-
-        EquipoTitular2[i].SetAmarillas(a);
-        if (a == 2) { EquipoTitular2[i].SetRojas(1); rojas2++; }
-
-        amarillas2 += a;
-    }
-
-    // -------------------- FALTAS --------------------
-    for (int i = 0; i < 11; i++)
-    {
-        int f = 0;
-
-        if ((rand() % 1000) < 130) f++;
-        if (f == 1 && (rand() % 1000) < 27) f++;
-        if (f == 2 && (rand() % 1000) < 7) f++;
-
-        EquipoTitular1[i].SetFaltas(f);
-        EquipoTitular2[i].SetFaltas(f);
-    }
-
-    // -------------------- PRÓRROGA (SOLO ELIMINACIÓN) --------------------
-    if (gol1 == gol2 && prorroga)
-    {
-        cout << "PRORROGA ACTIVADA\n";
-
-        for (int i = 0; i < 3; i++)
-        {
-            if ((rand() % 100) < 10) gol1++;
-            if ((rand() % 100) < 10) gol2++;
-        }
-
-        // si sigue empate → penal aleatorio
-        if (gol1 == gol2)
-        {
-            if (rand() % 2) gol1++;
-            else gol2++;
-        }
-    }
-
-    // -------------------- RESULTADO FINAL --------------------
-    GolEquipo1 = gol1;
-    GolEquipo2 = gol2;
-
-    AmarillasE1 = amarillas1;
-    AmarillasE2 = amarillas2;
-
-    RojasE1 = rojas1;
-    RojasE2 = rojas2;
-
-    if (gol1 > gol2)
-    {
-        Equipo1->SetGanados(1);
-        Equipo2->SetPerdidos(1);
-    }
-    else
-    {
-        Equipo2->SetGanados(1);
-        Equipo1->SetPerdidos(1);
-    }
-
-    // en esta parte se esta estan guardando las estadísiticas del jugador.
-    for (int i = 0; i < 11; i++)
-    {
-        EquipoTitular1[i].SetPartidos(1);
-        EquipoTitular2[i].SetPartidos(1);
-
-        // minutos (90 o 120)
-        int minutos = prorroga ? 120 : 90;
-
-        EquipoTitular1[i].SetMinutos(minutos);
-        EquipoTitular2[i].SetMinutos(minutos);
-    }
-
-
-
-    // -------------------- LIBERACIÓN --------------------
-  //  delete[] EquipoTitular1;
-  //  delete[] EquipoTitular2;
-
-  //  EquipoTitular1 = nullptr;
-//    EquipoTitular2 = nullptr;
-
-    *E1 = gol1;
-    *E2 = gol2;
-}
-*/
-
-void Partido::SimularPartido(unsigned char* E1, unsigned char* E2)
-{
-    int titulares1[11];
-    int titulares2[11];
-
-    Jugador* jugadores1 = Equipo1->GetJugadores();
-    Jugador* jugadores2 = Equipo2->GetJugadores();
-
-    Equipo1->SeleccionarTitulares(titulares1);
-    Equipo2->SeleccionarTitulares(titulares2);
-
-    unsigned char gol1 = 0;
-    unsigned char gol2 = 0;
-
-    unsigned char amarillas1 = 0;
-    unsigned char amarillas2 = 0;
-
-    unsigned char rojas1 = 0;
-    unsigned char rojas2 = 0;
-
-    // -------------------- GOLES --------------------
-    int gExp1 = rand() % 4;
-    int gExp2 = rand() % 4;
-
-    cout << "\n[DEBUG] gExp1: " << gExp1 << " gExp2: " << gExp2 << endl;
-
-    for (int i = 0; i < gExp1; i++)
-    {
-        gol1++;
         int idx = rand() % 11;
-
-        jugadores1[titulares1[idx]].SetGoles(1);
-
-        cout << "[DEBUG] GOL equipo1 jugador "
-             << titulares1[idx]
-             << " total: "
-             << jugadores1[titulares1[idx]].GetGoles()
-             << endl;
-    }
-
-    for (int i = 0; i < gExp2; i++)
-    {
-        gol2++;
-        int idx = rand() % 11;
-
         jugadores2[titulares2[idx]].SetGoles(1);
-
-        cout << "[DEBUG] GOL equipo2 jugador "
-             << titulares2[idx]
-             << " total: "
-             << jugadores2[titulares2[idx]].GetGoles()
-             << endl;
     }
 
-    // -------------------- TARJETAS --------------------
+    // -------------------- TARJETAS Y FALTAS --------------------
     for (int i = 0; i < 11; i++)
     {
-        int a1 = rand() % 3;
-        int a2 = rand() % 3;
+        int a1 = 0;
+        int a2 = 0;
+
+        if ((rand() % 1000) < 60) a1++;
+        if (a1 == 1 && (rand() % 1000) < 11) a1++;
+
+        if ((rand() % 1000) < 60) a2++;
+        if (a2 == 1 && (rand() % 1000) < 11) a2++;
 
         Jugador& j1 = jugadores1[titulares1[i]];
         Jugador& j2 = jugadores2[titulares2[i]];
@@ -330,15 +250,24 @@ void Partido::SimularPartido(unsigned char* E1, unsigned char* E2)
         if (a1 == 2) { j1.SetRojas(1); rojas1++; }
         if (a2 == 2) { j2.SetRojas(1); rojas2++; }
 
-        j1.SetFaltas(rand() % 3);
-        j2.SetFaltas(rand() % 3);
+        int f1 = 0;
+        int f2 = 0;
+
+        if ((rand() % 1000) < 130) f1++;
+        if (f1 == 1 && (rand() % 1000) < 27) f1++;
+        if (f1 == 2 && (rand() % 1000) < 7) f1++;
+
+        if ((rand() % 1000) < 130) f2++;
+        if (f2 == 1 && (rand() % 1000) < 27) f2++;
+        if (f2 == 2 && (rand() % 1000) < 7) f2++;
+
+        j1.SetFaltas(f1);
+        j2.SetFaltas(f2);
     }
 
     // -------------------- PRÓRROGA --------------------
     if (gol1 == gol2 && prorroga)
     {
-        cout << "[DEBUG] PRORROGA ACTIVADA\n";
-
         if (Equipo1->GetRanking() < Equipo2->GetRanking())
             gol1++;
         else
@@ -355,19 +284,21 @@ void Partido::SimularPartido(unsigned char* E1, unsigned char* E2)
     RojasE1 = rojas1;
     RojasE2 = rojas2;
 
-    cout << "[DEBUG] RESULTADO FINAL: "
-         << (int)gol1 << " - " << (int)gol2 << endl;
-
-    // -------------------- EQUIPOS --------------------
+    // -------------------- ESTADÍSTICAS DE EQUIPO --------------------
     if (gol1 > gol2)
     {
         Equipo1->SetGanados(1);
         Equipo2->SetPerdidos(1);
     }
-    else
+    else if (gol2 > gol1)
     {
         Equipo2->SetGanados(1);
         Equipo1->SetPerdidos(1);
+    }
+    else
+    {
+        Equipo1->SetEmpatados(1);
+        Equipo2->SetEmpatados(1);
     }
 
     Equipo1->SetGolesFavor(gol1);
@@ -385,14 +316,21 @@ void Partido::SimularPartido(unsigned char* E1, unsigned char* E2)
         jugadores2[titulares2[i]].SetPartidos(1);
 
         jugadores1[titulares1[i]].SetMinutos(
-            jugadores1[titulares1[i]].GetMinutos() + minutos
-            );
+            minutos);
 
         jugadores2[titulares2[i]].SetMinutos(
-            jugadores2[titulares2[i]].GetMinutos() + minutos
-            );
+            minutos);
     }
 
     *E1 = gol1;
     *E2 = gol2;
+
+    EstadisticaPartido(titulares1, titulares2, gol1, gol2);
 }
+
+
+
+
+
+
+

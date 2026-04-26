@@ -1,4 +1,3 @@
-
 #ifndef PARTIDO_H
 #define PARTIDO_H
 
@@ -90,9 +89,15 @@ public:
     void SetSede(const string& sede);
 
     void SetProrroga(bool prorroga);
+    void EstadisticaPartido(
+        int titulares1[11], int titulares2[11],
+        unsigned char gol1, unsigned char gol2
+        );
+
 
     // Simulación
     void SimularPartido(unsigned char* E1, unsigned char* E2);
 };
 
 #endif
+
