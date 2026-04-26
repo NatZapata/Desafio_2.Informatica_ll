@@ -69,10 +69,10 @@ unsigned short Jugador::GetFaltas()const{
 //Implementación de los métodos setters
 
 void Jugador::SetPartidos(unsigned short partidos_ ){
-    partidos=partidos_;
+    partidos+=partidos_;
 }
 void Jugador::SetGoles(unsigned short goles_){
-    goles=goles_;
+    goles+=goles_;
 }
 void Jugador::SetMinutos(unsigned short minutos_){
     minutos= minutos_;
@@ -81,11 +81,11 @@ void Jugador::SetAsistencias(unsigned short asistencias_){
     asistencias = asistencias_;
 }
 void Jugador::SetAmarillas(unsigned short amarillas_){
-    amarillas=amarillas_;
+    amarillas+=amarillas_;
 }
 void Jugador::SetRojas( unsigned short rojas_){
-    rojas=rojas_;
+    rojas+=rojas_;
 }
 void Jugador::SetFaltas(unsigned short faltas_){
-    faltas=faltas_;
+    faltas+=faltas_;
 }

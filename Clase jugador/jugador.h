@@ -1,6 +1,7 @@
 #ifndef JUGADOR_H
 #define JUGADOR_H
 #include <string>
+
 using namespace std;
 
 class Jugador {
@@ -56,6 +57,8 @@ public:
     void SetRojas( unsigned short rojas_);
     void SetFaltas(unsigned short faltas_);
 
+
 };
+
 
 #endif // JUGADOR_H
