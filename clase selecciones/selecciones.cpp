@@ -41,36 +41,16 @@ seleccion::seleccion(const seleccion& other)
     Rojas(other.Rojas),
     Faltas(other.Faltas)
 {
-    cout << "\n====================================\n";
-    cout << "DEBUG CONSTRUCTOR DE COPIAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n";
-    cout << "Pais: " << Pais << "\n";
-    cout << "====================================\n";
 
-    cout << "\n--- ESTADO ORIGINAL (other) ---\n";
 
-    for (int i = 0; i < 26; i++)
-    {
-        cout << "Jugador " << i
-             << " | nombre: " << other.Jugadores[i].GetNombre()
-             << " | goles: " << other.Jugadores[i].GetGoles()
-             << endl;
-    }
-
-    cout << "\n--- COPIANDO JUGADORES ---\n";
 
     for (int i = 0; i < 26; i++)
     {
         Jugadores[i] = other.Jugadores[i];
 
-        cout << "Jugador " << i
-             << " | goles copiados: "
-             << Jugadores[i].GetGoles()
-             << endl;
     }
 
-    cout << "====================================\n";
-    cout << "FIN DEBUG\n";
-    cout << "====================================\n\n";
+
 }
 
 
@@ -149,38 +129,6 @@ unsigned short seleccion::GetFaltas() const {
 }
 
 
-//Creacción dinámica del equipo titular
-
-/*
-Jugador* seleccion::Titulares(unsigned char* jugadores) {
-
-    Jugador* titulares = new Jugador[11];
-
-
-    if (jugadores == nullptr) {
-        for (int i = 0; i < 11; i++) {
-            titulares[i] = Jugadores[i];
-        }
-        return titulares;
-    }
-
-
-    for (unsigned char i = 0; i < 11; i++) {
-
-        unsigned char idx = jugadores[i];
-
-        if (idx >= 26) {
-            titulares[i] = Jugador();
-        }
-        else {
-            titulares[i] = Jugadores[idx];
-        }
-    }
-
-    return titulares;
-}
-
-*/
 Jugador* seleccion::Titulares()
 {
     static Jugador titulares[11];
@@ -205,15 +153,15 @@ Jugador* seleccion::Titulares()
 
 
 void seleccion::SetGolesFavor(unsigned short goles) {
-    GolesFavor = goles;
+    GolesFavor += goles;
 }
 
 void seleccion::SetGolesContra(unsigned short goles) {
-    GolesContra = goles;
+    GolesContra += goles;
 }
 
 void seleccion::SetGanados(unsigned short ganados) {
-    Ganados = ganados;
+    Ganados += ganados;
 }
 
 void seleccion::SetEmpatados(unsigned short empatados) {
@@ -221,19 +169,19 @@ void seleccion::SetEmpatados(unsigned short empatados) {
 }
 
 void seleccion::SetPerdidos(unsigned short perdidos) {
-    Perdidos = perdidos;
+    Perdidos += perdidos;
 }
 
 void seleccion::SetAmarillas(unsigned short amarillas) {
-    Amarillas = amarillas;
+    Amarillas += amarillas;
 }
 
 void seleccion::SetRojas(unsigned short rojas) {
-    Rojas = rojas;
+    Rojas += rojas;
 }
 
 void seleccion::SetFaltas(unsigned short faltas) {
-    Faltas = faltas;
+    Faltas += faltas;
 }
 
 // Metodos para el control de los jugadores.
@@ -308,7 +256,6 @@ void seleccion::SeleccionarTitulares(int indices[11])
         indices[i] = idx;
     }
 }
-
 
 
 

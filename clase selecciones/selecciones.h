@@ -96,4 +96,3 @@ ostream& operator<<(ostream& os, const seleccion& s);
 
 
 #endif // SELECCIONES_H
-
