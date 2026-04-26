@@ -60,5 +60,4 @@ public:
 
 };
 
-
 #endif // JUGADOR_H

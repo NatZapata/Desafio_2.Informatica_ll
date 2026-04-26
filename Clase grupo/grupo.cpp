@@ -19,24 +19,24 @@ Grupo::Grupo(char letra_grupo_,
              seleccion *equipo1_,
              seleccion *equipo2_,
              seleccion *equipo3_,
-             seleccion *equipo4_,
-             unsigned char *cantidad_puntos_,
-             unsigned short *goles_favor_,
-             unsigned short *goles_contra_
-             ):equipo1(equipo1_)
-    ,equipo2(equipo2_),
-    equipo3(equipo3_),equipo4(equipo4_)
+             seleccion *equipo4_)
+    : equipo1(equipo1_),
+    equipo2(equipo2_),
+    equipo3(equipo3_),
+    equipo4(equipo4_)
 {
     letra_grupo = letra_grupo_;
 
-    for (unsigned short i = 0; i < 4; i++)
+    for (int i = 0; i < 4; i++)
     {
-        //equipos[i] = equipos_[i];
-        cantidad_puntos[i] = cantidad_puntos_[i];
-        goles_favor[i] = goles_favor_[i];
-        goles_contra[i] = goles_contra_[i];
-        //posiciones[i]=posiciones_[i];
+        cantidad_puntos[i] = 0;
+        goles_favor[i] = 0;
+        goles_contra[i] = 0;
     }
+
+
+    for (int i = 0; i < 6; i++)
+        partidos[i] = nullptr;
 
     partidos[0] = new Partido(equipo1, equipo2, "20/06/2026", 0,0,0,0,0,0,false);
     partidos[1] = new Partido(equipo1, equipo3, "24/06/2026", 0,0,0,0,0,0,false);
@@ -45,24 +45,23 @@ Grupo::Grupo(char letra_grupo_,
     partidos[4] = new Partido(equipo2, equipo4, "01/07/2026", 0,0,0,0,0,0,false);
     partidos[5] = new Partido(equipo3, equipo4, "04/07/2026", 0,0,0,0,0,0,false);
 }
-Grupo::~Grupo(){}
+Grupo::~Grupo()
+{
+
+
+}
 
 char Grupo::GetLetraGrupo(){
     return letra_grupo;
 }
-seleccion *Grupo::GetEquipo(string &NombreEquipo){
+seleccion* Grupo::GetEquipo(string &NombreEquipo)
+{
+    if (equipo1 && equipo1->GetPais() == NombreEquipo) return equipo1;
+    if (equipo2 && equipo2->GetPais() == NombreEquipo) return equipo2;
+    if (equipo3 && equipo3->GetPais() == NombreEquipo) return equipo3;
+    if (equipo4 && equipo4->GetPais() == NombreEquipo) return equipo4;
 
-    if(equipo1->GetPais()==NombreEquipo){
-        return equipo1;
-    }
-    if(equipo2->GetPais()==NombreEquipo){
-        return equipo2;
-    }
-    if(equipo3->GetPais()==NombreEquipo){
-        return equipo3;
-    }
-    return equipo1;
-
+    return nullptr;
 }
 
 unsigned char Grupo::Getcantidad_puntos(unsigned char NumeroEquipo){
@@ -74,15 +73,19 @@ void Grupo::SetCantidad_puntos(unsigned char Equipo,
     cantidad_puntos[Equipo]+=PuntosGanados;
 }
 
-
-void Grupo::CrearlarTabla() {
-
-    unsigned char posiciones[4] = {0, 1, 2, 3};
+void Grupo::CrearlarTabla()
+{
     seleccion* equipos[4] = {equipo1, equipo2, equipo3, equipo4};
 
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3 - i; j++) {
 
+    for (int i = 0; i < 4; i++)
+        posiciones[i] = i;
+
+    // Ordenamiento de los equipos
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3 - i; j++)
+        {
             int a = posiciones[j];
             int b = posiciones[j + 1];
 
@@ -93,7 +96,8 @@ void Grupo::CrearlarTabla() {
                 cantidad_puntos[a] < cantidad_puntos[b] ||
                 (cantidad_puntos[a] == cantidad_puntos[b] && difA < difB) ||
                 (cantidad_puntos[a] == cantidad_puntos[b] && difA == difB && goles_favor[a] < goles_favor[b])
-                ) {
+                )
+            {
                 unsigned char temp = posiciones[j];
                 posiciones[j] = posiciones[j + 1];
                 posiciones[j + 1] = temp;
@@ -101,8 +105,10 @@ void Grupo::CrearlarTabla() {
         }
     }
 
-    for (unsigned char i = 0; i < 4; i++) {
-        cout << "Posicion " << (int)(i+1)
+    // Acá, se imprime la tabla
+    for (unsigned char i = 0; i < 4; i++)
+    {
+        cout << "Posicion " << (int)(i + 1)
         << ": " << equipos[posiciones[i]]->GetPais()
         << " | Pts: " << (int)cantidad_puntos[posiciones[i]]
         << " | GF: " << goles_favor[posiciones[i]]
@@ -110,66 +116,113 @@ void Grupo::CrearlarTabla() {
         << endl;
     }
 }
-void Grupo::SimularGrupo() {
 
+seleccion* Grupo::GetEquipo1() { return equipo1; }
+seleccion* Grupo::GetEquipo2() { return equipo2; }
+seleccion* Grupo::GetEquipo3() { return equipo3; }
+seleccion* Grupo::GetEquipo4() { return equipo4; }
+
+
+
+
+seleccion* Grupo::GetPrimero()
+{
     seleccion* equipos[4] = {equipo1, equipo2, equipo3, equipo4};
+    return equipos[posiciones[0]];
+}
 
+seleccion* Grupo::GetSegundo()
+{
+    seleccion* equipos[4] = {equipo1, equipo2, equipo3, equipo4};
+    return equipos[posiciones[1]];
+}
+
+seleccion* Grupo::GetTercero()
+{
+    seleccion* equipos[4] = {equipo1, equipo2, equipo3, equipo4};
+    return equipos[posiciones[2]];
+}
+
+seleccion* Grupo::GetCuarto()
+{
+    seleccion* equipos[4] = {equipo1, equipo2, equipo3, equipo4};
+    return equipos[posiciones[3]];
+}
+
+
+
+void Grupo::SimularGrupo()
+{
     cout << "\nPARTIDOS DEL GRUPO " << letra_grupo << "\n\n";
 
-    for (int i = 0; i < 6; i++) {
 
-        unsigned char goles1 = 0;
-        unsigned char goles2 = 0;
+    for (int i = 0; i < 4; i++)
+    {
+        cantidad_puntos[i] = 0;
+        goles_favor[i] = 0;
+        goles_contra[i] = 0;
+    }
 
-        // Simular partido (TU lógica interna)
-        partidos[i]->SimularPartido(&goles1, &goles2);
+    for (int i = 0; i < 6; i++)
+    {
+        unsigned char g1 = 0, g2 = 0;
+
+        // Simulacion de los partidos.
+        partidos[i]->SimularPartido(&g1, &g2);
 
         seleccion* e1 = partidos[i]->GetEquipo1();
         seleccion* e2 = partidos[i]->GetEquipo2();
 
-        // DEBUG (por si algo falla)
-        cout << "DEBUG: " << e1->GetPais() << " vs " << e2->GetPais() << endl;
+        cout << e1->GetPais() << " " << (int)g1
+             << " - " << (int)g2 << " "
+             << e2->GetPais() << endl;
 
-        int idx1 = -1;
-        int idx2 = -1;
+        seleccion* equipos[4] = {equipo1, equipo2, equipo3, equipo4};
 
-        // Buscar índices
-        for (int j = 0; j < 4; j++) {
+        int idx1 = -1, idx2 = -1;
+
+        for (int j = 0; j < 4; j++)
+        {
             if (equipos[j] == e1) idx1 = j;
             if (equipos[j] == e2) idx2 = j;
         }
 
-
-        if (idx1 == -1 || idx2 == -1) {
-            cout << "Error: equipo no encontrado\n";
+        if (idx1 == -1 || idx2 == -1)
+        {
+            cout << "Error: equipo no encontrado en grupo\n";
             continue;
         }
 
-        // Actualizar goles
-        goles_favor[idx1] += goles1;
-        goles_contra[idx1] += goles2;
+        // Actualización de los goles del grupo
+        goles_favor[idx1] += g1;
+        goles_contra[idx1] += g2;
 
-        goles_favor[idx2] += goles2;
-        goles_contra[idx2] += goles1;
+        goles_favor[idx2] += g2;
+        goles_contra[idx2] += g1;
 
-        // Actualizar puntos
-        if (goles1 > goles2) {
+        // puntos
+        if (g1 > g2)
+        {
             cantidad_puntos[idx1] += 3;
         }
-        else if (goles2 > goles1) {
+        else if (g2 > g1)
+        {
             cantidad_puntos[idx2] += 3;
         }
-        else {
+        else
+        {
             cantidad_puntos[idx1] += 1;
             cantidad_puntos[idx2] += 1;
         }
-
-        // Mostrar resultado
-        cout << e1->GetPais() << " " << (int)goles1
-             << " - " << (int)goles2 << " "
-             << e2->GetPais() << endl;
     }
 
     cout << "\n--- TABLA FINAL ---\n";
     CrearlarTabla();
+
+    //liberacion de la memoria.
+    for (int i = 0; i < 6; i++)
+    {
+        delete partidos[i];
+        partidos[i] = nullptr;
+    }
 }

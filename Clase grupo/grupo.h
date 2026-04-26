@@ -10,11 +10,13 @@ private:
     seleccion *equipo2;
     seleccion *equipo3;
     seleccion *equipo4;
+
     Partido* partidos[6];
+    unsigned char posiciones[4];
+
     unsigned char cantidad_puntos[4];
     unsigned short goles_favor[4];
     unsigned short goles_contra[4];
-    //   unsigned char posiciones[4];
 
 public:
     Grupo();
@@ -22,28 +24,46 @@ public:
           seleccion *equipo1_,
           seleccion *equipo2_,
           seleccion *equipo3_,
-          seleccion *equipo4_,
-          unsigned char *cantidad_puntos_,
-          unsigned short *goles_favor_,
-          unsigned short *goles_contra_
-          //   unsigned char *posiciones_
-          );
+          seleccion *equipo4_);
+
     ~Grupo();
 
-    //métodos getter.
     char GetLetraGrupo();
+
+    seleccion* GetEquipo1();
+    seleccion* GetEquipo2();
+    seleccion* GetEquipo3();
+    seleccion* GetEquipo4();
+
     seleccion *GetEquipo(string &NombreEquipo);
+
     unsigned char Getcantidad_puntos(unsigned char NumeroEquipo);
-    void SetCantidad_puntos(unsigned char Equipo,
-                            unsigned char PuntosGanados);
+    void SetCantidad_puntos(unsigned char Equipo, unsigned char PuntosGanados);
+
+    // void SimularGrupo();
+    void CrearlarTabla();
+
+
+
+
+
+
+
+
+
+
+
+
+    seleccion* GetPrimero();
+
+    seleccion* GetSegundo();
+
+    seleccion* GetTercero();
+
+    seleccion* GetCuarto();
     void SimularGrupo();
 
 
-
-    void CrearlarTabla();
-    //void ImprimirTabla();
-
 };
-
 
 #endif // GRUPO_H

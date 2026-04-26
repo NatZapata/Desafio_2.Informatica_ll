@@ -75,10 +75,10 @@ void Jugador::SetGoles(unsigned short goles_){
     goles+=goles_;
 }
 void Jugador::SetMinutos(unsigned short minutos_){
-    minutos= minutos_;
+    minutos += minutos_;
 }
 void Jugador::SetAsistencias(unsigned short asistencias_){
-    asistencias = asistencias_;
+    asistencias += asistencias_;
 }
 void Jugador::SetAmarillas(unsigned short amarillas_){
     amarillas+=amarillas_;
